@@ -44,7 +44,7 @@ function onRemoteUserAdded(userSnapshot) {
 function onRemoteUserChanged(userSnapshot) {
     var userId = userSnapshot.key();
     if (userId == currentUserId) { return; }
-    console.log("remote user changed");
+    // console.log("remote user changed");
     if (!(userId in lastSyncedMouseState)) {
         lastSyncedMouseState[userId] = false;
     }
@@ -55,14 +55,16 @@ function onRemoteUserChanged(userSnapshot) {
     drawbox.moveCursor(userId, cursor_position[0], cursor_position[1]);
 
     var remoteUserMouseDown = userMetadata.mouseDown;
-    if (remoteUserMouseDown) {
-        var previousMouseDown = lastSyncedMouseState[userId];
-        if (previousMouseDown == false && remoteUserMouseDown == true) {
-            drawbox.startPath(userId, cursor_position[0], cursor_position[1]);
-        }
-        drawbox.moveCursor(userId, cursor_position[0], cursor_position[1]);
-        if (previousMouseDown == true && remoteUserMouseDown == false) {
-            drawbox.commitPath(userId);
+    var previousMouseDown = lastSyncedMouseState[userId];
+    if (previousMouseDown == false && remoteUserMouseDown == true) {
+        console.log("remote path started");
+        drawbox.startPath(userId, cursor_position[0], cursor_position[1]);
+    } else if (previousMouseDown == true && remoteUserMouseDown == false) {
+        console.log("remote path ended");
+        drawbox.commitPath(userId);
+    } else {
+        if (remoteUserMouseDown) {
+            drawbox.drawPath(userId, cursor_position[0], cursor_position[1]);
         }
     }
     lastSyncedMouseState[userId] = remoteUserMouseDown;
@@ -99,7 +101,7 @@ function publishLocalCursorPosition(x, y) {
     currentUserRef.update({"cursor_position": [x, y]});
 }
 
-function publishNewLocalPath(x, y) {
+function publishNewLocalPath() {
 
     currentUserRef.update({
         "mouseDown": true
@@ -130,7 +132,7 @@ function onCanvasMouseDown(mouseEvent) {
     mouseDown = true;
     setupTextItem();
     drawbox.startPath(currentUserId, mouseEvent.x, mouseEvent.layerY);
-    publishNewLocalPath(mouseEvent.x, mouseEvent.layerY);
+    publishNewLocalPath();
 }
 
 function onCanvasMouseMove(mouseEvent) {
