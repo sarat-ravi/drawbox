@@ -115,6 +115,10 @@ function commitLocalPath() {
     });
 }
 
+function deleteLocalPaths() {
+    currentUserRef.remove();
+}
+
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // LOCAL EVENTS
 // ----------------------------------------------------------------------------------------------------------------------------------------------
@@ -161,6 +165,7 @@ var isDrawingEnabled = false;
 function drawingDisabled() {
     console.log("Clear Button Clicked");
     drawbox.eraseAllPaths(currentUserId);
+    deleteLocalPaths();
 
     $('#drawbox-canvas').remove();
 }
