@@ -15,13 +15,65 @@ port.onMessage.addListener(function(message) {
 port.postMessage({action : "get", key: "status"});
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
+// USER ACTIONS
+// ----------------------------------------------------------------------------------------------------------------------------------------------
+
+var users = {};
+
+function addUser(userId, fullName, pathColor) {
+    users[userId] = {
+        "paths": [],
+        "cursorShape": false,
+        "fullName": fullName,
+        "pathColor": pathColor
+    }
+}
+
+function moveCursor(userId, x, y) {
+    var user = users[userId];
+    var cursorShape = user.cursorShape;
+
+    if (cursorShape) {
+        cursorShape.remove();
+    }
+
+    var radius = 5;
+    cursorShape = new paper.Shape.Circle(new paper.Point(x,y), radius);
+    cursorShape.strokeColor = user.pathColor; 
+    cursorShape.fillColor = user.pathColor;
+    user.cursorShape = cursorShape;
+}
+
+// Start a new path for a user.
+function startPath(userId, x, y) {
+    var user = users[userId];
+    var paths = user.paths;
+    var pathColor = user.pathColor;
+	var path = new paper.Path({ segments: [new paper.Point(x, y)], strokeColor: pathColor, fullySelected: false });
+    paths.push(path);    
+}
+
+// Continue the path from the previous point to the new point.
+function drawPath(userId, x, y) {
+    var paths = users[userId].paths; 
+    var path = paths[paths.length - 1];
+    path.add(new paper.Point(x, y)); 
+}
+
+// Commits the path by simplifying it.
+function commitPath(userId) {
+    var paths = users[userId].paths; 
+    var path = paths[paths.length - 1];
+    path.simplify(10);
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------
 // CANVAS EVENTS
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 
 var mouseDown = false;
 var textItem;
-var path;
-var pathColor = 'red';
+addUser("me", "Sarat Tallamraju", "red");
 
 function setupTextItem() {
     if (textItem) { return; }
@@ -32,20 +84,22 @@ function onCanvasMouseDown(mouseEvent) {
     console.log(mouseEvent);
     mouseDown = true;
     setupTextItem();
-	path = new paper.Path({ segments: [new paper.Point(mouseEvent.x, mouseEvent.layerY)], strokeColor: pathColor, fullySelected: false });
+    startPath("me", mouseEvent.x, mouseEvent.layerY);
 }
 
 function onCanvasMouseMove(mouseEvent) {
-    if (mouseDown == false) { return; }
-    path.add(new paper.Point(mouseEvent.x, mouseEvent.layerY)); 
-    textItem.content = 'Saving...'
+    moveCursor("me", mouseEvent.x, mouseEvent.layerY);
+    if (mouseDown) {
+        textItem.content = 'Saving...'
+        drawPath("me", mouseEvent.x, mouseEvent.layerY);
+    }
 }
 
 function onCanvasMouseUp(mouseEvent) {
     console.log(mouseEvent);
     mouseDown = false;
-	path.simplify(10);
     textItem.content = "Saved"
+    commitPath("me");
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
