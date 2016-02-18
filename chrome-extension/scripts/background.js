@@ -12,6 +12,8 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
         sendResponse({value: sender.tab.id});
     } else if (message.action == "showPageActionForCurrentTab") {
         chrome.pageAction.show(sender.tab.id);
+    } else if (message.action == "getCurrentTabUrl") {
+        sendResponse({value: sender.tab.url});
     }
 });
 

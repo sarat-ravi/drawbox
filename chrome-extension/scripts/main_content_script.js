@@ -1,9 +1,30 @@
+// ----------------------------------------------------------------------------------------------------------------------------------------------
+// CURRENT USER STATE
+// ----------------------------------------------------------------------------------------------------------------------------------------------
+
+var currentUrl = "https_asdf_blah_com";
+var currentUserId = "me";
+var currentUserFullName = "Sarat Tallamraju";
+var currentUserPathColor = "red";
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------
+// SETTING PAGE STATE
+// ----------------------------------------------------------------------------------------------------------------------------------------------
+
 console.log("Extension Says Hello");
 
 var port = chrome.runtime.connect({name: "drawbox.port"});
 
 chrome.extension.sendMessage({action: "getCurrentTabId"}, function(response) {
     console.log("The actual tab id is: " + response.value);
+});
+
+chrome.extension.sendMessage({action: "getCurrentTabUrl"}, function(response) {
+    currentUrl = String(response.value);
+    currentUrl = currentUrl.replace(/\:/g,"_");
+    currentUrl = currentUrl.replace(/\//g,"_");
+    currentUrl = currentUrl.replace(/\./g,"_");
+    console.log("The encoded tab URL is: " + currentUrl);
 });
 
 chrome.extension.sendMessage({action: "showPageActionForCurrentTab"});
@@ -13,15 +34,6 @@ port.onMessage.addListener(function(message) {
 }); 
 
 port.postMessage({action : "get", key: "status"});
-
-// ----------------------------------------------------------------------------------------------------------------------------------------------
-// CURRENT USER STATE
-// ----------------------------------------------------------------------------------------------------------------------------------------------
-
-var currentUrl = "https_asdf_blah_com";
-var currentUserId = "me";
-var currentUserFullName = "Sarat Tallamraju";
-var currentUserPathColor = "red";
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // REMOTE EVENTS
@@ -247,8 +259,12 @@ function renderDrawButton() {
     drawButton.click(onDrawButtonClicked);
 }
 
+function figureOutCurrentUrl() {
+}
+
 function onWindowLoaded (windowEvent) {
     console.log("Window loaded");
+    figureOutCurrentUrl();
     setTimeout(function() {
         renderDrawButton();
     }, 500);
