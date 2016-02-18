@@ -47,6 +47,7 @@ function onRemoteUserChanged(userSnapshot) {
 
     var cursor_position = userMetadata.cursor_position;
     drawbox.moveCursor(userId, cursor_position[0], cursor_position[1]);
+    paper.view.draw();
 }
 
 function onRemoteUserRemoved(userSnapshot) {
