@@ -267,7 +267,7 @@ function onWindowLoaded (windowEvent) {
     figureOutCurrentUrl();
     setTimeout(function() {
         renderDrawButton();
-    }, 1000);
+    }, 2000);
 }
 
 window.addEventListener ("load", onWindowLoaded, false);
