@@ -15,6 +15,15 @@ port.onMessage.addListener(function(message) {
 port.postMessage({action : "get", key: "status"});
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
+// CURRENT USER STATE
+// ----------------------------------------------------------------------------------------------------------------------------------------------
+
+var currentUrl = "https_asdf_blah_com";
+var currentUserId = "me";
+var currentUserFullName = "Sarat Tallamraju";
+var currentUserPathColor = "red";
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------
 // LOCAL EVENTS
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 var firebaseRef = new Firebase("https://drawbox.firebaseio.com");
@@ -22,14 +31,18 @@ var currentPageRef;
 var currentUserRef;
 
 function onRemoteUserAdded(userSnapshot) {
+    console.log("remote user added");
     var userId = userSnapshot.key();
+    if (userId == currentUserId) { return; }
     var userMetadata = userSnapshot.val();
 
     drawbox.addUser(userId, userMetadata.fullName, userMetadata.pathColor);
 }
 
 function onRemoteUserChanged(userSnapshot) {
+    console.log("remote user changed");
     var userId = userSnapshot.key();
+    if (userId == currentUserId) { return; }
     var userMetadata = userSnapshot.val();
 
     var cursor_position = userMetadata.cursor_position;
@@ -37,7 +50,10 @@ function onRemoteUserChanged(userSnapshot) {
 }
 
 function onRemoteUserRemoved(userSnapshot) {
+    console.log("remote user removed");
+    console.log(userSnapshot);
     var userId = userSnapshot.key();
+    if (userId == currentUserId) { return; }
     var userMetadata = userSnapshot.val();
     // TODO(Sarat): Implement this.
 }
@@ -62,14 +78,6 @@ function setupCollaboration(url, userId, fullName, pathColor) {
 function publishLocalCursorPosition(x, y) {
     currentUserRef.update({"cursor_position": [x, y]});
 }
-// ----------------------------------------------------------------------------------------------------------------------------------------------
-// CURRENT USER STATE
-// ----------------------------------------------------------------------------------------------------------------------------------------------
-
-var currentUrl = "https_asdf_blah_com";
-var currentUserId = "me";
-var currentUserFullName = "Sarat Tallamraju";
-var currentUserPathColor = "red";
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // CANVAS EVENTS
