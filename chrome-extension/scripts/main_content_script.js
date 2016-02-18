@@ -17,6 +17,51 @@ port.postMessage({action : "get", key: "status"});
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // LOCAL EVENTS
 // ----------------------------------------------------------------------------------------------------------------------------------------------
+var firebaseRef = new Firebase("https://drawbox.firebaseio.com");
+var currentPageRef;
+var currentUserRef;
+
+function onRemoteUserAdded(userSnapshot) {
+    var userId = userSnapshot.key();
+    var userMetadata = userSnapshot.val();
+
+    drawbox.addUser(userId, userMetadata.fullName, userMetadata.pathColor);
+}
+
+function onRemoteUserChanged(userSnapshot) {
+    var userId = userSnapshot.key();
+    var userMetadata = userSnapshot.val();
+
+    var cursor_position = userMetadata.cursor_position;
+    drawbox.moveCursor(userId, cursor_position[0], cursor_position[1]);
+}
+
+function onRemoteUserRemoved(userSnapshot) {
+    var userId = userSnapshot.key();
+    var userMetadata = userSnapshot.val();
+    // TODO(Sarat): Implement this.
+}
+
+function setupCollaboration(url, userId, fullName, pathColor) {
+    currentPageRef = firebaseRef.child(url);
+    currentPageRef.set({"url": url});
+
+    currentUserRef = currentPageRef.child(userId);
+    currentUserRef.set({
+        "fullName": fullName,
+        "pathColor": pathColor,
+        "cursor_position": [0,0],
+        "userId": userId
+    });
+
+    currentPageRef.on('child_added', onRemoteUserAdded);
+    currentPageRef.on('child_changed', onRemoteUserChanged);
+    currentPageRef.on('child_removed', onRemoteUserRemoved);
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------
+// CANVAS EVENTS
+// ----------------------------------------------------------------------------------------------------------------------------------------------
 
 var mouseDown = false;
 var textItem;
@@ -54,6 +99,14 @@ function onCanvasMouseUp(mouseEvent) {
 
 function onDrawButtonClicked() {
     console.log("Draw Button Clicked");
+
+    var currentUrl = "https_asdf_blah_com";
+    var currentUserId = "me";
+    var currentUserFullName = "Sarat Tallamraju";
+    var currentUserPathColor = "red";
+
+    // Setup Collaboration
+    setupCollaboration(currentUrl, currentUserId, currentUserFullName, currentUserPathColor);
 
     // Create current user.
     drawbox.addUser("me", "Sarat Tallamraju", "red");
