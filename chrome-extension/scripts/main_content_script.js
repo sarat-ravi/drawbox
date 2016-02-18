@@ -98,7 +98,7 @@ function onCanvasMouseUp(mouseEvent) {
     console.log(mouseEvent);
     mouseDown = false;
     textItem.content = "Saved"
-    drawbox.commitPath("me");
+    drawbox.commitPath(currentUserId);
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
