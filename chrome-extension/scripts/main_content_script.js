@@ -13,3 +13,10 @@ port.onMessage.addListener(function(message) {
 }); 
 
 port.postMessage({action : "get", key: "status"});
+
+function onWindowLoaded (windowEvent) {
+    console.log("Window loaded");
+}
+
+window.addEventListener ("load", onWindowLoaded, false);
+
