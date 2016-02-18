@@ -24,66 +24,27 @@ var path;
 var pathColor = 'red';
 
 function setupTextItem() {
-    if (textItem) {
-        return;
-    }
-
-    textItem = new paper.PointText({
-	content: 'Click and drag to draw',
-	point: new paper.Point(20, 30),
-	fillColor: 'white',
-});
-
+    if (textItem) { return; }
+    textItem = new paper.PointText({ content: 'Click and drag to draw', point: new paper.Point(20, 30), fillColor: 'white', });
 }
 
 function onCanvasMouseDown(mouseEvent) {
     console.log(mouseEvent);
     mouseDown = true;
     setupTextItem();
-
-    // If we produced a path before, deselect it:
-	if (path) {
-		path.selected = false;
-	}
-
-	// Create a new path and set its stroke color to black:
-	path = new paper.Path({
-        segments: [new paper.Point(mouseEvent.x, mouseEvent.layerY)],
-		strokeColor: pathColor,
-		// Select the path, so we can see its segment points:
-		fullySelected: false
-	});
+	path = new paper.Path({ segments: [new paper.Point(mouseEvent.x, mouseEvent.layerY)], strokeColor: pathColor, fullySelected: false });
 }
 
 function onCanvasMouseMove(mouseEvent) {
-    if (mouseDown == false) {
-        // Mouse is not currently pressed, so disregard.
-        return;
-    }
-    
+    if (mouseDown == false) { return; }
     path.add(new paper.Point(mouseEvent.x, mouseEvent.layerY)); 
-
-	// Update the content of the text item to show how many
-	// segments it has:
-	// textItem.content = 'Segment count: ' + path.segments.length;
     textItem.content = 'Saving...'
 }
 
 function onCanvasMouseUp(mouseEvent) {
     console.log(mouseEvent);
     mouseDown = false;
-
-    var segmentCount = path.segments.length;
-
-	// When the mouse is released, simplify it:
 	path.simplify(10);
-
-	path.fullySelected = false;
-
-	var newSegmentCount = path.segments.length;
-	var difference = segmentCount - newSegmentCount;
-	var percentage = 100 - Math.round(newSegmentCount / segmentCount * 100);
-	// textItem.content = difference + ' of the ' + segmentCount + ' segments were removed. Saving ' + percentage + '%';
     textItem.content = "Saved"
 }
 
