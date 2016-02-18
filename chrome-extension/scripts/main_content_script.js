@@ -44,10 +44,10 @@ function onRemoteUserRemoved(userSnapshot) {
 
 function setupCollaboration(url, userId, fullName, pathColor) {
     currentPageRef = firebaseRef.child(url);
-    currentPageRef.set({"url": url});
+    currentPageRef.update({"url": url});
 
     currentUserRef = currentPageRef.child(userId);
-    currentUserRef.set({
+    currentUserRef.update({
         "fullName": fullName,
         "pathColor": pathColor,
         "cursor_position": [0,0],
@@ -57,6 +57,10 @@ function setupCollaboration(url, userId, fullName, pathColor) {
     currentPageRef.on('child_added', onRemoteUserAdded);
     currentPageRef.on('child_changed', onRemoteUserChanged);
     currentPageRef.on('child_removed', onRemoteUserRemoved);
+}
+
+function publishLocalCursorPosition(x, y) {
+    currentUserRef.update({"cursor_position": [x, y]});
 }
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // CURRENT USER STATE
@@ -88,6 +92,7 @@ function onCanvasMouseDown(mouseEvent) {
 
 function onCanvasMouseMove(mouseEvent) {
     drawbox.moveCursor(currentUserId, mouseEvent.x, mouseEvent.layerY);
+    publishLocalCursorPosition(mouseEvent.x, mouseEvent.layerY);
     if (mouseDown) {
         textItem.content = 'Saving...'
         drawbox.drawPath(currentUserId, mouseEvent.x, mouseEvent.layerY);
