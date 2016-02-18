@@ -14,9 +14,27 @@ port.onMessage.addListener(function(message) {
 
 port.postMessage({action : "get", key: "status"});
 
+function onDrawButtonClicked() {
+    console.log("Draw Button Clicked");
+}
+
+function renderCustomViews() {
+    $('title').text("Sarat");
+
+    // Inject Draw Button
+    var drawButton = $("<button class='btn responsive-header-button btn-preview-header-open-new drawbox-draw-button' data-tooltip='' data-tooltip-position='bottom' aria-label='Draw' data-type='preview-edit-draw' aria-haspopup='true' data-resin-target='draw'><span class='btn-preview-header-text'>Draw</span></button>");
+    var buttonContainerClass = '.preview-header-right';
+    drawButton.prependTo(buttonContainerClass);
+
+    // Wire up Draw Button to Event
+    drawButton.click(onDrawButtonClicked);
+}
+
 function onWindowLoaded (windowEvent) {
     console.log("Window loaded");
-    $('title').text("Sarat");
+    setTimeout(function() {
+        renderCustomViews();
+    }, 2000);
 }
 
 window.addEventListener ("load", onWindowLoaded, false);
