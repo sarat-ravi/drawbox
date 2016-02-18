@@ -23,6 +23,7 @@ var drawbox = {
         cursorShape.strokeColor = user.pathColor; 
         cursorShape.fillColor = user.pathColor;
         user.cursorShape = cursorShape;
+        paper.view.draw();
     },
 
     // Start a new path for a user.
