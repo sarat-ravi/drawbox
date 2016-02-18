@@ -105,11 +105,11 @@ function onDrawButtonClicked() {
     var currentUserFullName = "Sarat Tallamraju";
     var currentUserPathColor = "red";
 
-    // Setup Collaboration
-    setupCollaboration(currentUrl, currentUserId, currentUserFullName, currentUserPathColor);
-
     // Create current user.
     drawbox.addUser(currentUserId, currentUserFullName, currentUserPathColor);
+
+    // Setup Collaboration
+    setupCollaboration(currentUrl, currentUserId, currentUserFullName, currentUserPathColor);
 
     // Inject Canvas
     var canvasHtml = $("<canvas id='drawbox-canvas' resize></canvas>");
