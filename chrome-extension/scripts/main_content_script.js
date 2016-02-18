@@ -156,7 +156,16 @@ function onCanvasMouseUp(mouseEvent) {
 // DOCUMENT EVENTS
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 
-function onDrawButtonClicked() {
+var isDrawingEnabled = false;
+
+function drawingDisabled() {
+    console.log("Clear Button Clicked");
+    drawbox.eraseAllPaths(currentUserId);
+
+    $('#drawbox-canvas').remove();
+}
+
+function drawingEnabled() {
     console.log("Draw Button Clicked");
 
     // Create current user.
@@ -192,8 +201,34 @@ function onDrawButtonClicked() {
     canvas.addEventListener("mouseup", onCanvasMouseUp);
 }
 
-function renderCustomViews() {
-    $('title').text("Sarat");
+function onDrawButtonClicked() {
+    if (!isDrawingEnabled) {
+        renderClearButton();
+        drawingEnabled();
+        isDrawingEnabled = true;
+    } else {
+        renderDrawButton();
+        drawingDisabled();
+        isDrawingEnabled = false;
+    }
+}
+
+function renderClearButton() {
+    var existingDrawButton = $('.drawbox-draw-button');
+    existingDrawButton.remove()
+
+    // Inject Draw Button
+    var drawButton = $("<button class='btn responsive-header-button btn-preview-header-open-new drawbox-draw-button' data-tooltip='' data-tooltip-position='bottom' aria-label='Draw' data-type='preview-edit-draw' aria-haspopup='true' data-resin-target='draw'><span class='btn-preview-header-text'>Clear</span></button>");
+    var buttonContainerClass = '.preview-header-right';
+    drawButton.prependTo(buttonContainerClass);
+
+    // Wire up Draw Button to Event
+    drawButton.click(onDrawButtonClicked);
+}
+
+function renderDrawButton() {
+    var existingDrawButton = $('.drawbox-draw-button');
+    existingDrawButton.remove()
 
     // Inject Draw Button
     var drawButton = $("<button class='btn responsive-header-button btn-preview-header-open-new drawbox-draw-button' data-tooltip='' data-tooltip-position='bottom' aria-label='Draw' data-type='preview-edit-draw' aria-haspopup='true' data-resin-target='draw'><span class='btn-preview-header-text'>Draw</span></button>");
@@ -207,7 +242,7 @@ function renderCustomViews() {
 function onWindowLoaded (windowEvent) {
     console.log("Window loaded");
     setTimeout(function() {
-        renderCustomViews();
+        renderDrawButton();
     }, 500);
 }
 

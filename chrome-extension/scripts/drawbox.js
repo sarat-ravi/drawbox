@@ -47,6 +47,16 @@ var drawbox = {
         var paths = users[userId].paths; 
         var path = paths[paths.length - 1];
         path.simplify(10);
+    },
+
+    eraseAllPaths: function(userId) {
+        var paths = users[userId].paths;
+        var index;
+        for (index = 0; index < paths.length; ++index) {
+            var path = paths[index];
+            path.remove();
+        }
+        users[userId].paths = [];
     }
 };
 
