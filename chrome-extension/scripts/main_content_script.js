@@ -58,6 +58,14 @@ function setupCollaboration(url, userId, fullName, pathColor) {
     currentPageRef.on('child_changed', onRemoteUserChanged);
     currentPageRef.on('child_removed', onRemoteUserRemoved);
 }
+// ----------------------------------------------------------------------------------------------------------------------------------------------
+// CURRENT USER STATE
+// ----------------------------------------------------------------------------------------------------------------------------------------------
+
+var currentUrl = "https_asdf_blah_com";
+var currentUserId = "me";
+var currentUserFullName = "Sarat Tallamraju";
+var currentUserPathColor = "red";
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // CANVAS EVENTS
@@ -75,14 +83,14 @@ function onCanvasMouseDown(mouseEvent) {
     console.log(mouseEvent);
     mouseDown = true;
     setupTextItem();
-    drawbox.startPath("me", mouseEvent.x, mouseEvent.layerY);
+    drawbox.startPath(currentUserId, mouseEvent.x, mouseEvent.layerY);
 }
 
 function onCanvasMouseMove(mouseEvent) {
-    drawbox.moveCursor("me", mouseEvent.x, mouseEvent.layerY);
+    drawbox.moveCursor(currentUserId, mouseEvent.x, mouseEvent.layerY);
     if (mouseDown) {
         textItem.content = 'Saving...'
-        drawbox.drawPath("me", mouseEvent.x, mouseEvent.layerY);
+        drawbox.drawPath(currentUserId, mouseEvent.x, mouseEvent.layerY);
     }
 }
 
@@ -99,11 +107,6 @@ function onCanvasMouseUp(mouseEvent) {
 
 function onDrawButtonClicked() {
     console.log("Draw Button Clicked");
-
-    var currentUrl = "https_asdf_blah_com";
-    var currentUserId = "me";
-    var currentUserFullName = "Sarat Tallamraju";
-    var currentUserPathColor = "red";
 
     // Create current user.
     drawbox.addUser(currentUserId, currentUserFullName, currentUserPathColor);
