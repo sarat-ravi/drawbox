@@ -70,6 +70,10 @@ function onRemoteUserChanged(userSnapshot) {
     lastSyncedMouseState[userId] = remoteUserMouseDown;
 }
 
+function deleteLocalPaths() {
+    currentUserRef.remove();
+}
+
 function onRemoteUserRemoved(userSnapshot) {
     console.log(userSnapshot);
     var userId = userSnapshot.key();
@@ -77,6 +81,8 @@ function onRemoteUserRemoved(userSnapshot) {
     console.log("remote user removed");
     var userMetadata = userSnapshot.val();
     drawbox.eraseAllPaths(userId);
+    drawbox.eraseAllPaths(currentUserId);
+    deleteLocalPaths();
 }
 
 function setupCollaboration(url, userId, fullName, pathColor) {
@@ -113,10 +119,6 @@ function commitLocalPath() {
     currentUserRef.update({
         "mouseDown": false
     });
-}
-
-function deleteLocalPaths() {
-    currentUserRef.remove();
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
