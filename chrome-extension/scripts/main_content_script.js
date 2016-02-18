@@ -31,18 +31,18 @@ var currentPageRef;
 var currentUserRef;
 
 function onRemoteUserAdded(userSnapshot) {
-    console.log("remote user added");
     var userId = userSnapshot.key();
     if (userId == currentUserId) { return; }
+    console.log("remote user added");
     var userMetadata = userSnapshot.val();
 
     drawbox.addUser(userId, userMetadata.fullName, userMetadata.pathColor);
 }
 
 function onRemoteUserChanged(userSnapshot) {
-    console.log("remote user changed");
     var userId = userSnapshot.key();
     if (userId == currentUserId) { return; }
+    console.log("remote user changed");
     var userMetadata = userSnapshot.val();
 
     var cursor_position = userMetadata.cursor_position;
@@ -50,10 +50,10 @@ function onRemoteUserChanged(userSnapshot) {
 }
 
 function onRemoteUserRemoved(userSnapshot) {
-    console.log("remote user removed");
     console.log(userSnapshot);
     var userId = userSnapshot.key();
     if (userId == currentUserId) { return; }
+    console.log("remote user removed");
     var userMetadata = userSnapshot.val();
     // TODO(Sarat): Implement this.
 }
