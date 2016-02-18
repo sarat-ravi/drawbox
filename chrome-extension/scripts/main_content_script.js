@@ -83,6 +83,7 @@ function onRemoteUserRemoved(userSnapshot) {
     drawbox.eraseAllPaths(userId);
     drawbox.eraseAllPaths(currentUserId);
     deleteLocalPaths();
+    drawingDisabled();
 }
 
 function setupCollaboration(url, userId, fullName, pathColor) {
@@ -166,14 +167,17 @@ var isDrawingEnabled = false;
 
 function drawingDisabled() {
     console.log("Clear Button Clicked");
+    renderDrawButton();
     drawbox.eraseAllPaths(currentUserId);
     deleteLocalPaths();
 
     $('#drawbox-canvas').remove();
+    isDrawingEnabled = false;
 }
 
 function drawingEnabled() {
     console.log("Draw Button Clicked");
+    renderClearButton();
 
     // Create current user.
     drawbox.addUser(currentUserId, currentUserFullName, currentUserPathColor);
@@ -206,17 +210,14 @@ function drawingEnabled() {
     canvas.addEventListener("mousedown", onCanvasMouseDown);
     canvas.addEventListener("mousemove", onCanvasMouseMove);
     canvas.addEventListener("mouseup", onCanvasMouseUp);
+    isDrawingEnabled = true;
 }
 
 function onDrawButtonClicked() {
     if (!isDrawingEnabled) {
-        renderClearButton();
         drawingEnabled();
-        isDrawingEnabled = true;
     } else {
-        renderDrawButton();
         drawingDisabled();
-        isDrawingEnabled = false;
     }
 }
 
