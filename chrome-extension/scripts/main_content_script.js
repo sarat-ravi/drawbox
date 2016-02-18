@@ -76,7 +76,7 @@ function onRemoteUserRemoved(userSnapshot) {
     if (userId == currentUserId) { return; }
     console.log("remote user removed");
     var userMetadata = userSnapshot.val();
-    // TODO(Sarat): Implement this.
+    drawbox.eraseAllPaths(userId);
 }
 
 function setupCollaboration(url, userId, fullName, pathColor) {
