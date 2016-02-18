@@ -18,7 +18,7 @@ var drawbox = {
             cursorShape.remove();
         }
 
-        var radius = 5;
+        var radius = 10;
         cursorShape = new paper.Shape.Circle(new paper.Point(x,y), radius);
         cursorShape.strokeColor = user.pathColor; 
         cursorShape.fillColor = user.pathColor;
@@ -31,7 +31,8 @@ var drawbox = {
         var user = users[userId];
         var paths = user.paths;
         var pathColor = user.pathColor;
-        var path = new paper.Path({ segments: [new paper.Point(x, y)], strokeColor: pathColor, fullySelected: false });
+        var pathWidth = 10;
+        var path = new paper.Path({ segments: [new paper.Point(x, y)], strokeColor: pathColor, strokeWidth: pathWidth, fullySelected: false });
         paths.push(path);    
     },
 
