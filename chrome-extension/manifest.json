@@ -21,7 +21,10 @@
         {
             "matches" : ["https://cloud.app.box.com/files/*"],
             "run_at" : "document_start",
-            "js" : ["scripts/main_content_script.js"]
+            "js" : [
+                "scripts/jquery-2.2.0.min.js",
+                "scripts/main_content_script.js"
+            ]
         }
     ],
 

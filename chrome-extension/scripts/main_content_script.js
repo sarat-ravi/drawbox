@@ -16,6 +16,7 @@ port.postMessage({action : "get", key: "status"});
 
 function onWindowLoaded (windowEvent) {
     console.log("Window loaded");
+    $('title').text("Sarat");
 }
 
 window.addEventListener ("load", onWindowLoaded, false);
