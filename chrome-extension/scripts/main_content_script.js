@@ -10,12 +10,6 @@ chrome.extension.sendMessage({action: "showPageActionForCurrentTab"});
 
 port.onMessage.addListener(function(message) {
     console.log("[Content Script]: Received message: " + JSON.stringify(message));
-    if (message.action == "put") {
-        if (message.key = "tabId") {
-            console.log("The current Tab ID is: " + message.value);
-        }
-    }
-    
 }); 
 
-port.postMessage({action : "get", key: "tabId"});
+port.postMessage({action : "get", key: "status"});

@@ -1,7 +1,7 @@
 console.log("Background of Extension says hello");
 
-function getTabId() {
-    return 1;
+function getStatus() {
+    return "ready";
 }
 
 chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
@@ -20,8 +20,8 @@ chrome.runtime.onConnect.addListener(function(port) {
     port.onMessage.addListener(function(message) {
         console.log(message);
         if (message.action == "get") {
-            if (message.key == "tabId") {
-                port.postMessage({action: "put", key: "tabId", value: getTabId()});
+            if (message.key == "status") {
+                port.postMessage({action: "put", key: "status", value: getStatus()});
             }
         }
     });
