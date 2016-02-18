@@ -109,7 +109,7 @@ function onDrawButtonClicked() {
     setupCollaboration(currentUrl, currentUserId, currentUserFullName, currentUserPathColor);
 
     // Create current user.
-    drawbox.addUser("me", "Sarat Tallamraju", "red");
+    drawbox.addUser(currentUserId, currentUserFullName, currentUserPathColor);
 
     // Inject Canvas
     var canvasHtml = $("<canvas id='drawbox-canvas' resize></canvas>");
