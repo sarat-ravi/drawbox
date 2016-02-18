@@ -1,0 +1,33 @@
+{
+    "manifest_version": 2,
+    "name": "DrawBox",
+    "description": "Collaborative Drawing on Box",
+    "version": "1.0",
+
+    "background": {
+        "scripts": ["scripts/background.js"],
+        "persistent": false
+    },
+
+    "page_action": {
+        "default_icon": {
+            "19": "assets/box_app_icon_1x.png",
+            "38": "assets/box_app_icon_2x.png"
+        },
+        "default_title": "DrawBox Title"
+    },
+
+    "content_scripts": [
+        {
+            "matches" : ["https://cloud.app.box.com/files/*"],
+            "run_at" : "document_start",
+            "js" : ["scripts/main_content_script.js"]
+        }
+    ],
+
+    "permissions": [
+        "tabs",
+        "http://*/",
+        "https://*/"
+    ]
+}
