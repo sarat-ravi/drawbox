@@ -24,11 +24,13 @@ var currentUserFullName = "Sarat Tallamraju";
 var currentUserPathColor = "red";
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
-// LOCAL EVENTS
+// REMOTE EVENTS
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 var firebaseRef = new Firebase("https://drawbox.firebaseio.com");
 var currentPageRef;
 var currentUserRef;
+
+var lastSyncedMouseState = {};
 
 function onRemoteUserAdded(userSnapshot) {
     var userId = userSnapshot.key();
@@ -43,11 +45,27 @@ function onRemoteUserChanged(userSnapshot) {
     var userId = userSnapshot.key();
     if (userId == currentUserId) { return; }
     console.log("remote user changed");
+    if (!(userId in lastSyncedMouseState)) {
+        lastSyncedMouseState[userId] = false;
+    }
+
     var userMetadata = userSnapshot.val();
 
     var cursor_position = userMetadata.cursor_position;
     drawbox.moveCursor(userId, cursor_position[0], cursor_position[1]);
-    paper.view.draw();
+
+    var remoteUserMouseDown = userMetadata.mouseDown;
+    if (remoteUserMouseDown) {
+        var previousMouseDown = lastSyncedMouseState[userId];
+        if (previousMouseDown == false && remoteUserMouseDown == true) {
+            drawbox.startPath(userId, cursor_position[0], cursor_position[1]);
+        }
+        drawbox.moveCursor(userId, cursor_position[0], cursor_position[1]);
+        if (previousMouseDown == true && remoteUserMouseDown == false) {
+            drawbox.commitPath(userId);
+        }
+    }
+    lastSyncedMouseState[userId] = remoteUserMouseDown;
 }
 
 function onRemoteUserRemoved(userSnapshot) {
@@ -60,13 +78,14 @@ function onRemoteUserRemoved(userSnapshot) {
 }
 
 function setupCollaboration(url, userId, fullName, pathColor) {
-    currentPageRef = firebaseRef.child(url);
+    var currentPageRef = firebaseRef.child(url);
     currentPageRef.update({"url": url});
 
     currentUserRef = currentPageRef.child(userId);
     currentUserRef.update({
         "fullName": fullName,
         "pathColor": pathColor,
+        "mouseDown": false,
         "cursor_position": [0,0],
         "userId": userId
     });
@@ -80,8 +99,22 @@ function publishLocalCursorPosition(x, y) {
     currentUserRef.update({"cursor_position": [x, y]});
 }
 
+function publishNewLocalPath(x, y) {
+
+    currentUserRef.update({
+        "mouseDown": true
+    });
+}
+
+function commitLocalPath() {
+
+    currentUserRef.update({
+        "mouseDown": false
+    });
+}
+
 // ----------------------------------------------------------------------------------------------------------------------------------------------
-// CANVAS EVENTS
+// LOCAL EVENTS
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 
 var mouseDown = false;
@@ -97,6 +130,7 @@ function onCanvasMouseDown(mouseEvent) {
     mouseDown = true;
     setupTextItem();
     drawbox.startPath(currentUserId, mouseEvent.x, mouseEvent.layerY);
+    publishNewLocalPath(mouseEvent.x, mouseEvent.layerY);
 }
 
 function onCanvasMouseMove(mouseEvent) {
@@ -113,6 +147,7 @@ function onCanvasMouseUp(mouseEvent) {
     mouseDown = false;
     textItem.content = "Saved"
     drawbox.commitPath(currentUserId);
+    commitLocalPath();
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
