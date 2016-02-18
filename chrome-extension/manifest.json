@@ -22,8 +22,9 @@
             "matches" : ["https://cloud.app.box.com/files/*"],
             "run_at" : "document_start",
             "js" : [
-                "scripts/paper-full.js",
                 "scripts/jquery-2.2.0.min.js",
+                "scripts/paper-full.js",
+                "scripts/drawbox.js",
                 "scripts/main_content_script.js"
             ]
         }
